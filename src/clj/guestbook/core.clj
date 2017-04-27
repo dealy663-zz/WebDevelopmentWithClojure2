@@ -46,6 +46,10 @@
     (log/info component "started"))
   (.addShutdownHook (Runtime/getRuntime) (Thread. stop-app)))
 
+(defn errors-component [errors id]
+  (when-let [error (id @errors)]
+    [:div.alert.alert-danger (clojure.string/join error)]))
+
 (defn -main [& args]
   (cond
     (some #{"migrate" "rollback"} args)
