@@ -5,11 +5,13 @@
             [clojure.java.io :as io]
             [bouncer.core :as b]
             [bouncer.validators :as v]
-            [guestbook.db.core :as db]
-            [ring.util.response :refer [response status]]))
+            [guestbook.db.core :as db]))
 
-(defn home-page []
-  (layout/render "home.html"))
+(defn home-page [{:keys [flash]}]
+  (layout/render
+   "home.html"
+   (merge {:messages (db/get-messages)}
+          (select-keys flash [:name :message :errors]))))
 
 (defn about-page []
   (layout/render "about.html"))
@@ -23,18 +25,15 @@
 
 (defn save-message! [{:keys [params]}]
   (if-let [errors (validate-message params)]
-    (response/bad-request {:errors errors})
-    (try
+    (-> (response/found "/")
+        (assoc :flash (assoc params :errors errors)))
+    (do
       (db/save-message!
        (assoc params :timestamp (java.util.Date.)))
-      (response/ok {:status :ok})
-      (catch Exception e
-        (response/internal-server-error
-         {:errors {:server-error ["Failed to save message!"]}})))))
+      (response/found "/"))))
 
 (defroutes home-routes
-  (GET "/"             [] (home-page))
-  (GET "/messages"     [] (response/ok (db/get-messages)))
-  (GET "/about"        [] (about-page))
-  (POST "/add-message" req (save-message! req)))
+  (GET "/" request (home-page request))
+  (GET "/about" [] (about-page))
+  (POST "/message" request (save-message! request)))
 
