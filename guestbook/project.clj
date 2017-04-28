@@ -28,8 +28,11 @@
                  [ring/ring-core "1.6.0-RC3"]
                  [ring/ring-defaults "0.2.3"]
                  [bouncer "1.0.1"]
+                 [cljs-ajax "0.5.2"]
                  [org.clojure/clojurescript "1.7.228" :scope "provided"]
-                 [selmer "1.10.7"]]
+                 [selmer "1.10.7"]
+                 [reagent "0.5.1"]
+                 [com.taoensso/sente "1.8.0"]]
 
   :min-lein-version "2.0.0"
 
