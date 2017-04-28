@@ -25,7 +25,17 @@
                  [ring-webjars "0.1.1"]
                  [ring/ring-core "1.6.0-RC3"]
                  [ring/ring-defaults "0.2.3"]
-                 [selmer "1.10.7"]]
+                 [selmer "1.10.7"]
+                 [clj-http "2.0.0"]
+                 [reagent "0.5.1"]
+                 [reagent-forms "0.5.13"]
+                 [reagent-utils "0.1.7"]
+                 [cljs-ajax "0.5.3"]
+                 [secretary "1.2.3"]
+                 [org.clojure/core.async "0.2.374"]
+                 [cljs-ajax "0.5.3"]
+                 [luminus-log4j "0.1.2"]
+                 [clj-http "2.0.0"]]
 
   :min-lein-version "2.0.0"
 
@@ -116,5 +126,5 @@
                       :pretty-print true}}}}
                   
                   }
-   :profiles/dev {}
-   :profiles/test {}})
+   :profiles/dev        {}
+   :profiles/test       {}})
