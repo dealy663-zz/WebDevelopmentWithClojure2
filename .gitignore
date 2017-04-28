@@ -14,4 +14,4 @@ profiles.clj
 **/Dockerfile
 **/Procfile
 **/*.db
-
+/.idea
