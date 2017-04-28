@@ -19,3 +19,7 @@ WHERE id = :id
 -- :doc delete a user given the id
 DELETE FROM users
 WHERE id = :id
+
+-- :name read-employees :? :*
+-- reads the list of employees
+select * from employee
