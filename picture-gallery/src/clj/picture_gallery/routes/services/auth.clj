@@ -1,4 +1,4 @@
-(ns picture-gallery.routes.auth
+(ns picture-gallery.routes.services.auth
   (:require [picture-gallery.db.core :as db]
             [ring.util.http-response :as response]
             [picture-gallery.validation :refer [registration-errors]]
@@ -22,8 +22,8 @@
          :message "server error occurred while adding the user"}))))
 
 (defn register! [{:keys [session]} user]
-  (if (registration-errors user)
-    (response/precondition-failed {:result :error})
+  (if-let [error-msg (registration-errors user)]
+    (response/precondition-failed {:result {:error error-msg}})
     (try
       (db/create-user!
         (-> user

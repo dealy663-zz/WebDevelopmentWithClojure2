@@ -1,43 +1,27 @@
 (ns picture-gallery.routes.services
-  (:require [ring.util.http-response :refer :all]
+  (:require [picture-gallery.routes.services.auth :as auth]
+            [ring.util.http-response :refer :all]
             [compojure.api.sweet :refer :all]
             [schema.core :as s]))
 
+(s/defschema UserRegistration
+  {:id             String
+   :pass           String
+   :pass-confirm   String})
+
+(s/defschema Result
+  {:result                   s/Keyword
+   (s/optional-key :message) String})
+
+(declare service-routes)
 (defapi service-routes
   {:swagger {:ui "/swagger-ui"
              :spec "/swagger.json"
              :data {:info {:version "1.0.0"
-                           :title "Sample API"
-                           :description "Sample Services"}}}}
-  (context "/api" []
-    :tags ["thingie"]
-
-    (GET "/plus" []
-      :return       Long
-      :query-params [x :- Long, {y :- Long 1}]
-      :summary      "x+y with query-parameters. y defaults to 1."
-      (ok (+ x y)))
-
-    (POST "/minus" []
-      :return      Long
-      :body-params [x :- Long, y :- Long]
-      :summary     "x-y with body-parameters."
-      (ok (- x y)))
-
-    (GET "/times/:x/:y" []
-      :return      Long
-      :path-params [x :- Long, y :- Long]
-      :summary     "x*y with path-parameters"
-      (ok (* x y)))
-
-    (POST "/divide" []
-      :return      Double
-      :form-params [x :- Long, y :- Long]
-      :summary     "x/y with form-parameters"
-      (ok (/ x y)))
-
-    (GET "/power" []
-      :return      Long
-      :header-params [x :- Long, y :- Long]
-      :summary     "x^y with header-parameters"
-      (ok (long (Math/pow x y))))))
+                           :title "Picture Gallery API"
+                           :description "Public Services"}}}}
+  (POST "/register" req
+    :return Result
+    :body [user UserRegistration]
+    :summary "register a new user"
+    (auth/register! req user)))

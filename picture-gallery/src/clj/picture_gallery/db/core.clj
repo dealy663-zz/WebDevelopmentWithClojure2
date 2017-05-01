@@ -18,8 +18,8 @@
             Timestamp
             PreparedStatement]))
 
-;(declare ^:dynamic *db*)
-;(declare create-user!)
+(declare ^:dynamic *db*)
+(declare create-user!)
 
 (defstate ^:dynamic *db*
           :start (conman/connect!
