@@ -8,7 +8,8 @@
             [picture-gallery.ajax :refer [load-interceptors!]]
             [picture-gallery.components.common :as c]
             [picture-gallery.components.registration :as reg]
-            [ajax.core :refer [GET POST]])
+            [picture-gallery.components.login :as l]
+            [ajax.core :as ajax])
   (:import goog.History))
 
 (defn nav-link [uri title page collapsed?]
@@ -23,9 +24,12 @@
     [:ul.nav.navbar-nav.pull-xs-right
      [:li.nav-item
       [:a.dropdown-item.btn
-       {:on-click #(session/remove! :identity)}
+       {:on-click #(ajax/POST
+                     "/logout"
+                     {:handler (fn [] (session/remove! :identity))})}
        [:i.fa.fa-user] " " id " | sign out"]]]
     [:ul.nav.navbar-nav.pull-xs-right
+     [:li.nav-item [l/login-button]]
      [:li.nav-item [reg/registration-button]]]))
 
 (defn navbar []
@@ -100,7 +104,7 @@
 ;; -------------------------
 ;; Initialize app
 (defn fetch-docs! []
-  (GET (str js/context "/docs") {:handler #(session/put! :docs %)}))
+  (ajax/GET (str js/context "/docs") {:handler #(session/put! :docs %)}))
 
 (defn mount-components []
   (r/render [#'navbar] (.getElementById js/document "navbar"))
@@ -109,4 +113,5 @@
 (defn init! []
   (load-interceptors!)
   (hook-browser-navigation!)
+  (session/put! :identity js/identity)
   (mount-components))

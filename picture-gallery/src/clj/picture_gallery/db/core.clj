@@ -19,7 +19,7 @@
             PreparedStatement]))
 
 (declare ^:dynamic *db*)
-(declare create-user!)
+(declare create-user! get-user)
 
 (defstate ^:dynamic *db*
           :start (conman/connect!
