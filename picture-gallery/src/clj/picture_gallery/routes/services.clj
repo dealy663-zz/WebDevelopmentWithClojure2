@@ -1,5 +1,7 @@
 (ns picture-gallery.routes.services
   (:require [picture-gallery.routes.services.auth :as auth]
+            [picture-gallery.routes.services.upload :as upload]
+            [compojure.api.upload :refer [wrap-multipart-params TempFileUpload]]
             [ring.util.http-response :refer :all]
             [compojure.api.sweet :refer :all]
             [schema.core :as s]))
@@ -36,3 +38,17 @@
     :summary "remove user session"
     :return Result
     (auth/logout!)))
+
+(declare restricted-service-routes)
+(defapi restricted-service-routes
+  {:swagger {:ui "/swagger-ui-private"
+             :spec "/swagger-private.json"
+             :data {:info {:version "1.0.0"
+                           :title "Picture Gallery API"
+                           :description "Private Services"}}}}
+  (POST "/upload" req
+    :multipart-params [file :- TempFileUpload]
+    :middleware [wrap-multipart-params]
+    :summary "handles image upload"
+    :return Result
+    (upload/save-image! (:identity req) file)))
