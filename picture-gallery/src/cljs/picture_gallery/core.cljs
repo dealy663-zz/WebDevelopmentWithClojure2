@@ -10,6 +10,7 @@
             [picture-gallery.components.registration :as reg]
             [picture-gallery.components.login :as l]
             [picture-gallery.components.upload :as u]
+            [picture-gallery.components.gallery :as g]
             [ajax.core :as ajax])
   (:import goog.History))
 
@@ -71,6 +72,7 @@
 
 (def pages
   {:home #'home-page
+   :gallery #'g/gallery-page
    :about #'about-page})
 
 (defn modal []
@@ -88,6 +90,10 @@
 
 (secretary/defroute "/" []
   (session/put! :page :home))
+
+(secretary/defroute "/gallery/:owner" [owner]
+                    (g/fetch-gallery-thumbs! owner)
+                    (session/put! :page :gallery))
 
 (secretary/defroute "/about" []
   (session/put! :page :about))

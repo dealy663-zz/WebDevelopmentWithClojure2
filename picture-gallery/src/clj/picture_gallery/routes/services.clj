@@ -1,9 +1,10 @@
-(ns picture-gallery.routes.services
+() (ns picture-gallery.routes.services
   (:require [picture-gallery.routes.services.auth :as auth]
             [picture-gallery.routes.services.upload :as upload]
             [compojure.api.upload :refer [wrap-multipart-params TempFileUpload]]
             [ring.util.http-response :refer :all]
             [compojure.api.sweet :refer :all]
+            [picture-gallery.routes.services.gallery :as gallery]
             [schema.core :as s]))
 
 (s/defschema UserRegistration
@@ -14,6 +15,10 @@
 (s/defschema Result
   {:result                   s/Keyword
    (s/optional-key :message) String})
+
+(s/defschema Gallery
+  {:owner String
+   :name String})
 
 (declare service-routes)
 (defapi service-routes
@@ -37,7 +42,18 @@
   (POST "/logout" []
     :summary "remove user session"
     :return Result
-    (auth/logout!)))
+    (auth/logout!))
+
+  (GET "/gallery/:owner/:name" []
+    :summary "display user image"
+    :path-params [owner :- String name :- String]
+    (gallery/get-image owner name))
+
+  (GET "/list-thumbnails/:owner" []
+    :path-params [owner :- String]
+    :summary "list thumbnails for images in the gallery"
+    :return [Gallery]
+    (gallery/list-thumbnails owner)))
 
 (declare restricted-service-routes)
 (defapi restricted-service-routes
@@ -52,3 +68,4 @@
     :summary "handles image upload"
     :return Result
     (upload/save-image! (:identity req) file)))
+
