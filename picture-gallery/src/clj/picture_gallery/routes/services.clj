@@ -1,11 +1,12 @@
 () (ns picture-gallery.routes.services
-  (:require [picture-gallery.routes.services.auth :as auth]
-            [picture-gallery.routes.services.upload :as upload]
-            [compojure.api.upload :refer [wrap-multipart-params TempFileUpload]]
-            [ring.util.http-response :refer :all]
-            [compojure.api.sweet :refer :all]
-            [picture-gallery.routes.services.gallery :as gallery]
-            [schema.core :as s]))
+     (:require [picture-gallery.routes.services.auth :as auth]
+               [picture-gallery.routes.services.upload :as upload]
+               [compojure.api.upload :refer [wrap-multipart-params TempFileUpload]]
+               [ring.util.http-response :refer :all]
+               [compojure.api.sweet :refer :all]
+               [picture-gallery.routes.services.gallery :as gallery]
+               [schema.core :as s]
+               [picture-gallery.db.core :as db]))
 
 (s/defschema UserRegistration
   {:id             String
@@ -17,8 +18,9 @@
    (s/optional-key :message) String})
 
 (s/defschema Gallery
-  {:owner String
-   :name String})
+  {:owner               String
+   :name                String
+   (s/optional-key :rk) s/Num})
 
 (declare service-routes)
 (defapi service-routes
@@ -53,7 +55,12 @@
     :path-params [owner :- String]
     :summary "list thumbnails for images in the gallery"
     :return [Gallery]
-    (gallery/list-thumbnails owner)))
+    (gallery/list-thumbnails owner))
+
+  (GET "/list-galleries" []
+    :summary "lists a thumbnail for each user"
+    :return [Gallery]
+    (gallery/list-galleries)))
 
 (declare restricted-service-routes)
 (defapi restricted-service-routes
