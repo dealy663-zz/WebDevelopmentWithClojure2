@@ -19,7 +19,7 @@
             PreparedStatement]))
 
 (declare ^:dynamic *db*)
-(declare create-user! get-user get-image list-thumbnails select-gallery-previews)
+(declare create-user! get-user get-image delete-file! list-thumbnails select-gallery-previews)
 
 (defstate ^:dynamic *db*
           :start (conman/connect!

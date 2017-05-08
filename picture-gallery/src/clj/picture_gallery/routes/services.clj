@@ -60,7 +60,14 @@
   (GET "/list-galleries" []
     :summary "lists a thumbnail for each user"
     :return [Gallery]
-    (gallery/list-galleries)))
+    (gallery/list-galleries))
+
+  (DELETE "/image/:thumbnail" {:keys [identity]}
+    :path-params [thumbnail :- String]
+    :summary "delete the specified file from the database"
+    :return Result
+    (gallery/delete-image!
+      identity thumbnail (clojure.string/replace thumbnail #"thumb_" ""))))
 
 (declare restricted-service-routes)
 (defapi restricted-service-routes
