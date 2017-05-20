@@ -46,21 +46,7 @@
        :src link}]
      [:div.modal-backdrop.fade.in]]))
 
-;(defn thumb-link [{:keys [owner name]}]
-;  [:div.col-sm-4>img
-;   {:src (str js/context "/gallery/" owner "/" name)
-;    :on-click #(session/put!
-;                 :modal
-;                 (image-modal
-;                   (str js/context "/gallery/" owner "/"
-;                        (s/replace name #"thumb_" ""))))}])
-
-(defn gallery [links]
-  [:div.text-xs-center
-   (for [row (partition-all 3 links)]
-     ^{:key row} [:div.row (for [link row]
-                             ^{:key link} [thumb-link link])])])
-
+(declare gallery)
 (defn gallery-page []
   (let [page (atom 0)]
     (fn []
@@ -95,7 +81,7 @@
        [:div
         [:button.btn.btn-primary
          {:on-click #(delete-image! name)}
-         "delete"]
+         "Delete"]
         [:button.btn.btn-danger
          {:on-click #(session/remove! :modal)}
          "Cancel"]]])))
@@ -113,3 +99,9 @@
      [:div.text-xs-center>div.btn.btn-danger
       {:on-click #(delete-image-button owner name)}
       [:i.fa.fa-times]])])
+
+(defn gallery [links]
+  [:div.text-xs-center
+   (for [row (partition-all 3 links)]
+     ^{:key row} [:div.row (for [link row]
+                             ^{:key link} [thumb-link link])])])
