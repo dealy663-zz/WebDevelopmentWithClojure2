@@ -19,7 +19,8 @@
             PreparedStatement]))
 
 (declare ^:dynamic *db*)
-(declare create-user! get-user get-image delete-file! list-thumbnails select-gallery-previews)
+(declare create-user! get-user get-image delete-file! list-thumbnails select-gallery-previews delete-user!
+         delete-user-images!)
 
 (defstate ^:dynamic *db*
           :start (conman/connect!
@@ -81,3 +82,7 @@
   IPersistentVector
   (sql-value [value] (to-pg-json value)))
 
+(defn delete-account! [id]
+  (conman/with-transaction [*db*]
+                           (delete-user! {:id id})
+                           (delete-user-images! {:owner id})))

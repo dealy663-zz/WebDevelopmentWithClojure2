@@ -55,3 +55,13 @@ WHERE s.rk = 1
 DELETE FROM files
 WHERE name = :name
 AND owner = :owner
+
+-- :name delete-user! :! :n
+-- deletes the user account
+DELETE FROM users
+WHERE id = :id
+
+-- :name delete-user-images! :! :n
+-- deletes all the images for the specified user
+DELETE FROM files
+WHERE owner = :owner
